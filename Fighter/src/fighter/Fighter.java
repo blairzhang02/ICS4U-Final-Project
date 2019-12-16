@@ -19,23 +19,26 @@ public class Fighter extends JFrame {
         //create the User interface
         initUI();
     }
+
     private void initUI() {
         //set title of the JFrame
         setTitle("Fighter");
         //add a custom JPanel to draw on
         add(new DrawingSurface());
         //set the size of the window
-        setSize(900,700);
-        
+        setSize(1000, 539);
+       
         //tell the JFrame what to do when closed
         //this is important if our application has multiple windows
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }
-    public static void main(String[] args) {
-         // TODO code application logic here
-        SwingUtilities.invokeLater(new Runnable() {
 
+    public static void main(String[] args) {
+        // TODO code application logic here
+        
+        SwingUtilities.invokeLater(new Runnable() {
+            
             @Override
             public void run() {
                 //instantiate the main window
