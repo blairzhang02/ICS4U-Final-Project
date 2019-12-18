@@ -20,7 +20,7 @@ abstract public class FighterClass implements Character {
     protected int health;
     protected int damage;
     protected int mvmtSpeed; //movement speed
-    protected int x, y, xSpeed, ySpeed, jumpY;
+    protected int x, y, xSpeed, ySpeed;
 
     /**
      * Primary Constructor of a character
@@ -81,13 +81,13 @@ abstract public class FighterClass implements Character {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_LEFT) {
             xSpeed = -2;
-            jumpY = y;
+            
         }
         if (key == KeyEvent.VK_RIGHT) {
             xSpeed = 2;
         }
 
-        if (key == KeyEvent.VK_UP && y <= 320) {
+        if (key == KeyEvent.VK_UP && y >= 280) {
 
             ySpeed = -2;
 
@@ -96,7 +96,7 @@ abstract public class FighterClass implements Character {
         if (key == KeyEvent.VK_DOWN) {
             ySpeed = 2;
         }
-
+       
     }
 
     public void fall() {
@@ -113,13 +113,14 @@ abstract public class FighterClass implements Character {
 
         if (key == KeyEvent.VK_RIGHT) {
             xSpeed = 0;
-
+            
         }
 
         if (key == KeyEvent.VK_UP) {
 
            
               ySpeed = 0;
+              
         }
 
         if (key == KeyEvent.VK_DOWN) {
