@@ -21,6 +21,7 @@ abstract public class FighterClass implements Character {
     protected int damage;
     protected int mvmtSpeed; //movement speed
     protected int x, y, xSpeed, ySpeed;
+    protected boolean up = false, down = false, right = false, left = false;
 
     /**
      * Primary Constructor of a character
@@ -79,24 +80,42 @@ abstract public class FighterClass implements Character {
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_LEFT) {
-            xSpeed = -2;
+        if (key == KeyEvent.VK_LEFT && x>=20) {
+            System.out.println(x);
+            if (x == 20) {
+                xSpeed = 0;
+            } else {
+                xSpeed = -2;
+            }
+
+        }
+        if (key == KeyEvent.VK_RIGHT && x<=920) {
+            System.out.println(x);
+            if (x == 920) {
+                xSpeed = 0;
+            } else {
+                xSpeed = 2;
+            }
+        }
+
+        if (key == KeyEvent.VK_UP && y >= 220) {
             
-        }
-        if (key == KeyEvent.VK_RIGHT) {
-            xSpeed = 2;
-        }
-
-        if (key == KeyEvent.VK_UP && y >= 280) {
-
-            ySpeed = -2;
+            if (y == 220) {
+                ySpeed = 0;
+            } else {
+                ySpeed = -2;
+            }
 
         }
 
-        if (key == KeyEvent.VK_DOWN) {
-            ySpeed = 2;
+        if (key == KeyEvent.VK_DOWN && y <=350) {
+             if (y == 350) {
+                ySpeed = 0;
+            } else {
+                ySpeed = 2;
+            }
         }
-       
+
     }
 
     public void fall() {
@@ -113,14 +132,13 @@ abstract public class FighterClass implements Character {
 
         if (key == KeyEvent.VK_RIGHT) {
             xSpeed = 0;
-            
+
         }
 
         if (key == KeyEvent.VK_UP) {
 
-           
-              ySpeed = 0;
-              
+            ySpeed = 0;
+
         }
 
         if (key == KeyEvent.VK_DOWN) {
