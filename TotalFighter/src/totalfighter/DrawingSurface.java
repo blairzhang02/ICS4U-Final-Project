@@ -30,8 +30,10 @@ public class DrawingSurface extends JPanel implements ActionListener {
     private Image healthBar1;
     private Image healthBar2;
     private final int DELAY = 10;
+    private long kickStartTime1,punchStartTime1, kickStartTime2, punchStartTime2;
     private Timer timer;
     private long jumpingTime = 200;
+    private boolean punchCoolDown1 = false, kickCoolDown1 = false, punchCoolDown2 = false, kickCoolDown2 = false;
     ArrayList keys = new ArrayList();
     DamageFighter f1;
     HealthFighter f2;
@@ -48,8 +50,8 @@ public class DrawingSurface extends JPanel implements ActionListener {
         addKeyListener(new TAdapter());
         setFocusable(true);
 
-        f1 = new DamageFighter("f1", 100, 10, 1, 1, 20, 360, true);
-        f2 = new HealthFighter("f2", 100, 10, 1, 1, 600, 360, false);
+        f1 = new DamageFighter("f1", 100, 10, 1, 1, 20, 360, true, true);
+        f2 = new HealthFighter("f2", 100, 10, 1, 1, 867, 360, false, false);
         timer = new Timer(DELAY, this);
         timer.start();
 
@@ -73,31 +75,47 @@ public class DrawingSurface extends JPanel implements ActionListener {
         g2d.fillRect(this.getWidth() - healthBar2.getWidth(null) + 15, 18, 150 * (f2.getHealth() / 100), 18);
         f1.draw(g2d, f1.getX(), f1.getY());
         f2.draw(g2d, f2.getX(), f2.getY());
+        if (f1.getX() - f2.getX() > 0) {
+            f1.setInitalDirection(false);
+            f2.setInitalDirection(true);
 
+        } else {
+            f1.setInitalDirection(true);
+            f2.setInitalDirection(false);
+        }
+        
+
+        checkCollision();
         repaint();
     }
 
-    private void loadImage() {
-        //loading a random background image
-        int r = (int) (Math.random() * 5 + 1);
-        switch (r) {
-            case 1:
-                background = new ImageIcon("src//totalfighter//backgrounds//treebackground.gif").getImage();
-                break;
-            case 2:
-                background = new ImageIcon("src//totalfighter//backgrounds//templebackground.jpg").getImage();
-                break;
-            case 3:
-                background = new ImageIcon("src//totalfighter//backgrounds//shipbackground.gif").getImage();
-                break;
-            case 4:
-                background = new ImageIcon("src//totalfighter//backgrounds//mountainbackground.jpg").getImage();
-                break;
-            default:
-                background = new ImageIcon("src//totalfighter//backgrounds//bridgebackground.gif").getImage();
-                break;
+    public void checkCollision() {
+
+        if (f1.getX() + 120 >= f2.getX() && f1.getX() < f2.getX()) {
+
         }
 
+    }
+
+    private void loadImage() {
+        /**
+         * //loading a random background image int r = (int) (Math.random() * 5
+         * + 1);
+         *
+         * switch (r) { case 1: background = new
+         * ImageIcon("src//totalfighter//backgrounds//indoorbackground.gif").getImage();
+         * break; case 2: background = new
+         * ImageIcon("src//totalfighter//backgrounds//templebackground.gif").getImage();
+         * break; case 3: background = new
+         * ImageIcon("src//totalfighter//backgrounds//dragonbackground.gif").getImage();
+         * break; case 4: background = new
+         * ImageIcon("src//totalfighter//backgrounds//stormbackground.gif").getImage();
+         * break; default: background = new
+         * ImageIcon("src//totalfighter//backgrounds//bridgebackground.gif").getImage();
+         * break; }
+         *
+         */
+        background = new ImageIcon("src//totalfighter//backgrounds//bridgebackground.gif").getImage();
         //loading health bar images
         healthBar1 = new ImageIcon("src//totalfighter//healthBar.png").getImage();
         healthBar2 = new ImageIcon("src//totalfighter//healthBarP2.png").getImage();
@@ -137,10 +155,16 @@ public class DrawingSurface extends JPanel implements ActionListener {
                 f2.setJump(false);
 
             }
+            if (key == KeyEvent.VK_DOWN) {
+                f2.setCrouch(false);
+
+            }
             if (key == KeyEvent.VK_N) {
 
             }
-
+            if (key == KeyEvent.VK_M) {
+                f2.setPunch(false);
+            }
             if (key == KeyEvent.VK_A) {
                 f1.setMovingLeft(false);
 
@@ -150,16 +174,21 @@ public class DrawingSurface extends JPanel implements ActionListener {
                 f1.setMovingRight(false);
 
             }
+            if (key == KeyEvent.VK_S) {
+                f1.setCrouch(false);
+
+            }
 
             if (key == KeyEvent.VK_W) {
                 f1.setJump(false);
 
             }
-            if (key == KeyEvent.VK_B) {
-
+            if (key == KeyEvent.VK_G) {
+                f1.setPunch(false);
             }
 
             if (key == KeyEvent.VK_F) {
+
             }
 
             if (key == KeyEvent.VK_N) {
@@ -170,7 +199,6 @@ public class DrawingSurface extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
-
             if (key == KeyEvent.VK_LEFT) {
                 f2.setMovingLeft(true);
                 f2.setWalk(true);
@@ -191,11 +219,39 @@ public class DrawingSurface extends JPanel implements ActionListener {
                 f2.setJump(true);
 
             }
+            if (key == KeyEvent.VK_DOWN) {
+                f2.setCrouch(true);
+
+            }
             if (key == KeyEvent.VK_N) {
-                f2.setKick(true);
+                if (kickCoolDown2 == false) {
+                    f2.setKick(true);
+                    kickCoolDown2 = true;
+                    kickStartTime2 = System.currentTimeMillis();
+                }
+
+                if (kickCoolDown2 == true && (System.currentTimeMillis() - kickStartTime2) >= 1100) {
+
+                    kickCoolDown2 = false;
+                    f2.setKick(true);
+                }
             }
             if (key == KeyEvent.VK_M) {
-                f2.setPunch(true);
+                if (punchCoolDown2 == false) {
+                    f2.setPunch(true);
+                    punchCoolDown2= true;
+                    punchStartTime2 = System.currentTimeMillis();
+                }
+
+                if (punchCoolDown2 == true && (System.currentTimeMillis() - punchStartTime2) >= 700) {
+                    
+                    punchCoolDown2 = false;
+                    f2.setPunch(true);
+
+                }else if (punchCoolDown2 == true && (System.currentTimeMillis() - punchStartTime2) < 700) {
+                    f2.setPunch(false);
+                }
+
             }
 
             if (key == KeyEvent.VK_A) {
@@ -217,14 +273,44 @@ public class DrawingSurface extends JPanel implements ActionListener {
             if (key == KeyEvent.VK_W) {
                 f1.setJump(true);
             }
-            if (key == KeyEvent.VK_F) {
-                f1.setKick(true);
+            if (key == KeyEvent.VK_S) {
+                f1.setCrouch(true);
+
             }
+            if (key == KeyEvent.VK_F) {
+
+                if (kickCoolDown1 == false) {
+                    f1.setKick(true);
+                    kickCoolDown1 = true;
+                    kickStartTime1 = System.currentTimeMillis();
+                }
+
+                if (kickCoolDown1 == true && (System.currentTimeMillis() - kickStartTime1) >= 1100) {
+
+                    kickCoolDown1 = false;
+                    f1.setKick(true);
+                }
+            }
+
             if (key == KeyEvent.VK_G) {
-                f1.setPunch(true);;
+                if (punchCoolDown1 == false) {
+                    f1.setPunch(true);
+                    punchCoolDown1 = true;
+                    punchStartTime1 = System.currentTimeMillis();
+                }
+                System.out.println(System.currentTimeMillis() - punchStartTime1);
+                if (punchCoolDown1 == true && (System.currentTimeMillis() - punchStartTime1) >= 700) {
+                    
+                    punchCoolDown1 = false;
+                    f1.setPunch(true);
+
+                }else if (punchCoolDown1 == true && (System.currentTimeMillis() - punchStartTime1) < 700) {
+                 
+                    f1.setPunch(false);
+                }
+
             }
 
         }
     }
-
 }
